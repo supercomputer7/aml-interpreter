@@ -1,5 +1,6 @@
 PROGRAM_OBJS = \
     main.o \
+	bytecode/package.o \
 	format/output.o \
 	format/params.o \
 	tables/dsdt.o
