@@ -20,6 +20,7 @@ typedef struct ACPI_DSDT {
 
 int determine_dsdt_size(int dsdt_fd);
 bool validate_dsdt(int dsdt_fd);
-struct ACPI_DSDT* fetch_full_dsdt(int dsdt_fd, size_t dsdt_size);
+void fetch_full_dsdt(int dsdt_fd, size_t dsdt_size);
+const DSDT* dsdt_data();
 
 #endif

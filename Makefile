@@ -1,5 +1,7 @@
 PROGRAM_OBJS = \
     main.o \
+	format/output.o \
+	format/params.o \
 	tables/dsdt.o
 
 OUTPUT = amldecode

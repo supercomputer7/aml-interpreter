@@ -4,6 +4,8 @@
 #include <tables/dsdt.h>
 #include <unistd.h>
 
+static DSDT* s_dsdt;
+
 int determine_dsdt_size(int dsdt_fd)
 {
     DSDT* buffer = malloc(sizeof(DSDT));
@@ -23,10 +25,14 @@ bool validate_dsdt(int dsdt_fd)
     free(buffer);
     return valid;
 }
-struct ACPI_DSDT* fetch_full_dsdt(int dsdt_fd, size_t dsdt_size)
+void fetch_full_dsdt(int dsdt_fd, size_t dsdt_size)
 {
     DSDT* buffer = malloc(dsdt_size);
     lseek(dsdt_fd, 0, SEEK_SET);
     read(dsdt_fd, (char*)&buffer, dsdt_size);
-    return buffer;
+    s_dsdt = buffer;
+}
+const DSDT* dsdt_data()
+{
+    return s_dsdt;
 }

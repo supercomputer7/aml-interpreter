@@ -1,26 +1,17 @@
-#include <fcntl.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <tables/dsdt.h>
-#include <unistd.h>
+#include <format/output.h>
+#include <format/params.h>
+#include <string.h>
 
 int main(int argc, char* argv[])
 {
-    if (argc < 2) {
-        printf("Error: No file specified.\n");
-        return -1;
+    if (argc >= 2) {
+        if (!strcmp(argv[1], "--help") || !strcmp(argv[1], "-h")) {
+            print_help();
+            return 0;
+        } else if (!strcmp(argv[1], "--version") || !strcmp(argv[1], "-v")) {
+            print_version();
+            return 0;
+        }
     }
-
-    int dsdt_fd = open(argv[1], O_RDONLY);
-    if (dsdt_fd < 0) {
-        perror(argv[1]);
-        return -1;
-    }
-    if (!validate_dsdt(dsdt_fd)) {
-        printf("Error: DSDT not valid, please load a DSDT file\n");
-        return -1;
-    }
-    DSDT* aml = fetch_full_dsdt(dsdt_fd, determine_dsdt_size(dsdt_fd));
-    free(aml);
-    return 0;
+    return handle_cmd_arguments(argc, argv);
 }
