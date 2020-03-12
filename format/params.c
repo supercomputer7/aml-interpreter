@@ -1,3 +1,4 @@
+#include <bytecode/package.h>
 #include <fcntl.h>
 #include <format/output.h>
 #include <format/params.h>
@@ -11,20 +12,23 @@ int handle_cmd_arguments(int argc, char* argv[])
 {
     if (argc < 2) {
         printf("Error: No parameters specified.\n");
-        return -1;
+        return 1;
     }
 
     int dsdt_fd = open(argv[argc - 1], O_RDONLY);
     if (dsdt_fd < 0) {
         perror(argv[argc - 1]);
         print_help();
-        return -1;
+        return 1;
     }
-
     if (!validate_dsdt(dsdt_fd)) {
-        printf("Error: DSDT not valid, please load a DSDT file\n");
-        return -1;
+        printf("Error: Invalid DSDT file.\n");
+        return 1;
     }
-    fetch_full_dsdt(dsdt_fd, determine_dsdt_size(dsdt_fd));
+    if (!fetch_full_dsdt(dsdt_fd, determine_dsdt_size(dsdt_fd))) {
+        printf("Error: Cannot fetch DSDT file.\n");
+        return 1;
+    }
+    close(dsdt_fd);
     return 0;
 }
